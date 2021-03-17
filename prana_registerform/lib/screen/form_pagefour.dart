@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../default_button.dart';
-import '../konstanta.dart';
 import '../size_config.dart';
 
 class FormPageFour extends StatefulWidget {
@@ -69,7 +68,7 @@ class _FormPageFourState extends State<FormPageFour> {
   _pickDate() async {
     DateTime date = await showDatePicker(
       context: context,
-      initialDate: pickedDate,
+      initialDate: (pickedDate != null) ? pickedDate : DateTime.now(),
       firstDate: DateTime(DateTime.now().year - 5),
       lastDate: DateTime(DateTime.now().year + 5),
     );
@@ -92,13 +91,6 @@ class _FormPageFourState extends State<FormPageFour> {
         time = jam;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    time = TimeOfDay.now();
-    pickedDate = DateTime.now();
   }
 
   @override
@@ -146,9 +138,21 @@ class _FormPageFourState extends State<FormPageFour> {
                   disabledBorder: InputBorder.none,
                 ),
                 child: ListTile(
-                  title: Text(
-                      "${_namahari[pickedDate.weekday - 1]}, ${pickedDate.day} ${_namabulan[pickedDate.month - 1]} ${pickedDate.year}"),
-                  trailing: Icon(Icons.keyboard_arrow_down),
+                  visualDensity: VisualDensity(vertical: -4),
+                  title: Transform(
+                    transform: Matrix4.translationValues(-16, 0.0, 0.0),
+                    child: Text((() {
+                      if (pickedDate != null) {
+                        return "${_namahari[pickedDate.weekday - 1]}, ${pickedDate.day} ${_namabulan[pickedDate.month - 1]} ${pickedDate.year}";
+                      } else {
+                        return "- Choose Date -";
+                      }
+                    }())),
+                  ),
+                  trailing: Transform(
+                    transform: Matrix4.translationValues(16, 0.0, 0.0),
+                    child: Icon(Icons.keyboard_arrow_down),
+                  ),
                   onTap: _pickDate,
                 ),
               ),
@@ -172,20 +176,27 @@ class _FormPageFourState extends State<FormPageFour> {
                   disabledBorder: InputBorder.none,
                 ),
                 child: ListTile(
-                  title: Text((() {
-                    if (time != null) {
-                      return "${time.hour} : ${time.minute}";
-                    } else {
-                      return "${pickedDate.hour} : ${pickedDate.minute}";
-                    }
-                  }())),
-                  trailing: Icon(Icons.keyboard_arrow_down),
+                  visualDensity: VisualDensity(vertical: -4),
+                  title: Transform(
+                    transform: Matrix4.translationValues(-16, 0.0, 0.0),
+                    child: Text((() {
+                      if (time != null) {
+                        return "${time.hour} : ${time.minute}";
+                      } else {
+                        return "- Choose Time -";
+                      }
+                    }())),
+                  ),
+                  trailing: Transform(
+                    transform: Matrix4.translationValues(16, 0.0, 0.0),
+                    child: Icon(Icons.keyboard_arrow_down),
+                  ),
                   onTap: _pickTime,
                 ),
               ),
             ),
             SizedBox(
-              height: getProportionateScreenHeight(40),
+              height: getProportionateScreenHeight(50),
             ),
             Align(
               alignment: FractionalOffset.bottomCenter,
