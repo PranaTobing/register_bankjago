@@ -19,12 +19,29 @@ class _FormPageTwoState extends State<FormPageTwo> {
   bool _textNumber = false;
   bool _textChar = false;
 
+  TextEditingController passController = TextEditingController();
+  String passfield;
+
   final _formKey = GlobalKey<FormState>();
 
   void _toggle() {
     setState(() {
       _obsecureText = !_obsecureText;
     });
+  }
+
+  checkForm(theemail, thepass) {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      /* Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PageTwo(
+            email: theemail,
+          ),
+        ),
+      ); */
+    }
   }
 
   @override
@@ -56,7 +73,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
               height: getProportionateScreenHeight(50),
             ),
             TextFormField(
-              // controller: emailController,
+              controller: passController,
               obscureText: _obsecureText,
               decoration: InputDecoration(
                 filled: true,
@@ -71,14 +88,12 @@ class _FormPageTwoState extends State<FormPageTwo> {
                 ),
               ),
               validator: (value) {
-                /* if (value.isEmpty) {
-                  return 'Plase input the email';
-                } else if (!RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(value)) {
-                  return 'Please input the rigth email';
+                if (value.isEmpty) {
+                  return 'Plase input the password';
+                } else if (value.length < 6) {
+                  return 'Please input minimum 6 characters';
                 }
-                return null;*/
+                return null;
               },
               onChanged: (text) {
                 if (text.contains(RegExp(r'[a-z]'))) {
@@ -190,7 +205,12 @@ class _FormPageTwoState extends State<FormPageTwo> {
               alignment: FractionalOffset.bottomCenter,
               child: DefaultButton(
                 text: "Next",
-                press: () {},
+                press: () {
+                  passfield = passController.text;
+                  setState(() {
+                    checkForm(widget.email, passfield);
+                  });
+                },
               ),
             ),
           ],
