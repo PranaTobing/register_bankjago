@@ -20,7 +20,7 @@ InputDecorationTheme inputDecorationTheme() {
   return InputDecorationTheme(
     contentPadding: EdgeInsets.symmetric(
       horizontal: 15,
-      vertical: 20,
+      vertical: 15,
     ),
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,

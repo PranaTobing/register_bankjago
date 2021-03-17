@@ -59,7 +59,7 @@ class _PageFourState extends State<PageFour> with TickerProviderStateMixin {
             Container(
               height: getProportionateScreenHeight(80),
               padding: EdgeInsets.symmetric(
-                  horizontal: getProportionateScreenWidth(25)),
+                  horizontal: getProportionateScreenWidth(30)),
               alignment: Alignment.centerLeft,
               child: AnimatedBuilder(
                 animation: animationController,

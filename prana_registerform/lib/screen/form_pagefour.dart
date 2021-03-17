@@ -19,7 +19,33 @@ class FormPageFour extends StatefulWidget {
 }
 
 class _FormPageFourState extends State<FormPageFour> {
-  AnimationController animationController;
+  DateTime pickedDate;
+  TimeOfDay time;
+
+  List _namahari = [
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+    "Minggu"
+  ];
+
+  List _namabulan = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Mei",
+    "Jun",
+    "Jul",
+    "Agu",
+    "Sep",
+    "Okt",
+    "Nov",
+    "Des"
+  ];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -40,8 +66,44 @@ class _FormPageFourState extends State<FormPageFour> {
     }
   }
 
+  _pickDate() async {
+    DateTime date = await showDatePicker(
+      context: context,
+      initialDate: pickedDate,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+
+    if (date != null) {
+      setState(() {
+        pickedDate = date;
+      });
+    }
+  }
+
+  _pickTime() async {
+    TimeOfDay jam = await showTimePicker(
+      context: context,
+      initialTime: (time != null) ? time : new TimeOfDay.now(),
+    );
+
+    if (jam != null) {
+      setState(() {
+        time = jam;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    time = TimeOfDay.now();
+    pickedDate = DateTime.now();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(time);
     return Form(
       key: _formKey,
       child: Padding(
@@ -66,7 +128,61 @@ class _FormPageFourState extends State<FormPageFour> {
                   color: Colors.white),
             ),
             SizedBox(
-              height: getProportionateScreenHeight(30),
+              height: getProportionateScreenHeight(20),
+            ),
+            Container(
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Date',
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+                child: ListTile(
+                  title: Text(
+                      "${_namahari[pickedDate.weekday - 1]}, ${pickedDate.day} ${_namabulan[pickedDate.month - 1]} ${pickedDate.year}"),
+                  trailing: Icon(Icons.keyboard_arrow_down),
+                  onTap: _pickDate,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: getProportionateScreenHeight(20),
+            ),
+            Container(
+              padding: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Time',
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+                child: ListTile(
+                  title: Text((() {
+                    if (time != null) {
+                      return "${time.hour} : ${time.minute}";
+                    } else {
+                      return "${pickedDate.hour} : ${pickedDate.minute}";
+                    }
+                  }())),
+                  trailing: Icon(Icons.keyboard_arrow_down),
+                  onTap: _pickTime,
+                ),
+              ),
             ),
             SizedBox(
               height: getProportionateScreenHeight(40),
