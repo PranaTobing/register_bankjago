@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../default_button.dart';
 import '../konstanta.dart';
 import '../size_config.dart';
+import 'page_three.dart';
 
 class FormPageTwo extends StatefulWidget {
   final String email;
@@ -14,10 +15,11 @@ class FormPageTwo extends StatefulWidget {
 
 class _FormPageTwoState extends State<FormPageTwo> {
   bool _obsecureText = true;
-  bool _textLower = false;
-  bool _textUpper = false;
-  bool _textNumber = false;
-  bool _textChar = false;
+  int _textLower = 0;
+  int _textUpper = 0;
+  int _textNumber = 0;
+  int _textChar = 0;
+  String _textTotVal = '';
 
   TextEditingController passController = TextEditingController();
   String passfield;
@@ -32,15 +34,14 @@ class _FormPageTwoState extends State<FormPageTwo> {
 
   checkForm(theemail, thepass) {
     final form = _formKey.currentState;
-    if (form.validate()) {
+    final totalCom = _textLower + _textUpper + _textNumber + _textChar;
+    if (form.validate() && totalCom == 4) {
       form.save();
-      /* Navigator.of(context).push(
+      Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => PageTwo(
-            email: theemail,
-          ),
+          builder: (context) => PageThree(email: theemail, pass: thepass),
         ),
-      ); */
+      );
     }
   }
 
@@ -49,7 +50,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.all(getProportionateScreenHeight(30)),
+        padding: EdgeInsets.all(getProportionateScreenHeight(20)),
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
@@ -66,7 +67,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
             Text(
               'Password will be used to login to account',
               style: TextStyle(
-                  fontSize: getProportionateScreenWidth(14),
+                  fontSize: getProportionateScreenWidth(15),
                   color: Colors.white),
             ),
             SizedBox(
@@ -96,43 +97,80 @@ class _FormPageTwoState extends State<FormPageTwo> {
                 return null;
               },
               onChanged: (text) {
+                setState(() {
+                  _textTotVal = '';
+                });
                 if (text.contains(RegExp(r'[a-z]'))) {
                   setState(() {
-                    _textLower = true;
+                    _textLower = 1;
                   });
                 } else {
                   setState(() {
-                    _textLower = false;
+                    _textLower = 0;
                   });
                 }
 
                 if (text.contains(RegExp(r'[A-Z]'))) {
                   setState(() {
-                    _textUpper = true;
+                    _textUpper = 1;
                   });
                 } else {
                   setState(() {
-                    _textUpper = false;
+                    _textUpper = 0;
                   });
                 }
 
                 if (text.contains(RegExp(r'[0-9]'))) {
                   setState(() {
-                    _textNumber = true;
+                    _textNumber = 1;
                   });
                 } else {
                   setState(() {
-                    _textNumber = false;
+                    _textNumber = 0;
                   });
                 }
 
                 if (text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
                   setState(() {
-                    _textChar = true;
+                    _textChar = 1;
                   });
                 } else {
                   setState(() {
-                    _textChar = false;
+                    _textChar = 0;
+                  });
+                }
+
+                if ((_textLower + _textUpper + _textNumber + _textChar) == 4) {
+                  setState(() {
+                    _textTotVal = 'Very Strong';
+                  });
+                } else if ((_textLower +
+                        _textUpper +
+                        _textNumber +
+                        _textChar) ==
+                    3) {
+                  setState(() {
+                    _textTotVal = 'Strong';
+                  });
+                } else if ((_textLower +
+                        _textUpper +
+                        _textNumber +
+                        _textChar) ==
+                    2) {
+                  setState(() {
+                    _textTotVal = 'Weak';
+                  });
+                } else if ((_textLower +
+                        _textUpper +
+                        _textNumber +
+                        _textChar) ==
+                    1) {
+                  setState(() {
+                    _textTotVal = 'Very Weak';
+                  });
+                } else {
+                  setState(() {
+                    _textTotVal = '';
                   });
                 }
               },
@@ -140,11 +178,35 @@ class _FormPageTwoState extends State<FormPageTwo> {
             SizedBox(
               height: getProportionateScreenHeight(40),
             ),
-            Text(
-              'Complexity',
-              style: TextStyle(
-                  fontSize: getProportionateScreenWidth(14),
-                  color: Colors.white),
+            Row(
+              children: [
+                Text(
+                  'Complexity: ',
+                  style: TextStyle(
+                      fontSize: getProportionateScreenWidth(14),
+                      color: Colors.white),
+                ),
+                Text(_textTotVal,
+                    style: (() {
+                      if (_textTotVal == 'Very Strong') {
+                        return TextStyle(
+                            fontSize: getProportionateScreenWidth(14),
+                            color: Colors.green);
+                      } else if (_textTotVal == 'Strong') {
+                        return TextStyle(
+                            fontSize: getProportionateScreenWidth(14),
+                            color: Colors.lime);
+                      } else if (_textTotVal == 'Weak') {
+                        return TextStyle(
+                            fontSize: getProportionateScreenWidth(14),
+                            color: Colors.orange);
+                      } else {
+                        return TextStyle(
+                            fontSize: getProportionateScreenWidth(14),
+                            color: Colors.red);
+                      }
+                    }())),
+              ],
             ),
             SizedBox(
               height: getProportionateScreenHeight(50),
@@ -154,7 +216,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
               children: [
                 Column(
                   children: [
-                    _textLower
+                    (_textLower == 1)
                         ? ChecklistPass()
                         : TextCheckPass(indicator: 'a'),
                     SizedBox(
@@ -165,7 +227,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
                 ),
                 Column(
                   children: [
-                    _textUpper
+                    (_textUpper == 1)
                         ? ChecklistPass()
                         : TextCheckPass(indicator: 'A'),
                     SizedBox(
@@ -176,7 +238,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
                 ),
                 Column(
                   children: [
-                    _textNumber
+                    (_textNumber == 1)
                         ? ChecklistPass()
                         : TextCheckPass(indicator: '123'),
                     SizedBox(
@@ -187,7 +249,7 @@ class _FormPageTwoState extends State<FormPageTwo> {
                 ),
                 Column(
                   children: [
-                    _textChar
+                    (_textChar == 1)
                         ? ChecklistPass()
                         : TextCheckPass(indicator: '9+'),
                     SizedBox(
