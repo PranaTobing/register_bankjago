@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prana_registerform/screen/page_one.dart';
+import 'package:prana_registerform/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,10 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: theme(),
       home: PageOne(),
       debugShowCheckedModeBanner: false,
     );
